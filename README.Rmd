@@ -1,0 +1,11 @@
+---
+title: "hw01"
+author: "Brendan Zimmer"
+date: "9/22/2021"
+output: github_document
+---
+
+```{r}
+cars
+```
+I will be doing the train project for this class
