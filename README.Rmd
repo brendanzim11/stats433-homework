@@ -2,7 +2,9 @@
 title: "hw01"
 author: "Brendan Zimmer"
 date: "9/22/2021"
-output: github_document
+output: 
+  github_document:
+  html_preview: false
 ---
 
 #Goes to https://github.com/brendanzim11/stats433-homework
