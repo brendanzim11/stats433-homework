@@ -3,6 +3,8 @@ hw01
 Brendan Zimmer
 9/22/2021
 
+\#Goes to <https://github.com/brendanzim11/stats433-homework>
+
 \#Library
 
 ``` r
