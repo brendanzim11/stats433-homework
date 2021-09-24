@@ -4,6 +4,9 @@ author: "Brendan Zimmer"
 date: "9/22/2021"
 output: github_document
 ---
+
+#Goes to https://github.com/brendanzim11/stats433-homework
+
 #Library
 ```{r}
 library(dplyr)
