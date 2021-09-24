@@ -4,79 +4,45 @@ author: "Brendan Zimmer"
 date: "9/22/2021"
 output: github_document
 ---
-```{r}
-library(rvest)
-library(stringr)
-```
-
-
-```{r}
-staff_data <- read.csv(url("https://guide.wisc.edu/faculty/"), row.names = NULL)
-staff_data
-```
-```{r}
-staff_data <- read_html("https://guide.wisc.edu/faculty/")
-
-```
-
-```{r}
-staff_names <- html_nodes(staff_data, "p")
-staff_full <- strsplit(toString(staff_names), "<p>")[[1]]
-head(staff_full)
-```
-```{r}
-#gsub("<br>", " ", staff_full)
-staff_full <- str_replace_all(staff_full, "<br>", "-")
-staff_full <- str_replace_all(staff_full, "</p>", " ")
-head(staff_full)
-```
-
-
-```{r}
-staff_full <- 
-```
-
-```{r}
-df = read.delim("2020HwyBridgesDelimitedAllStates.txt", header = TRUE, sep = ",")
-head(df)
-```
+#Library
 ```{r}
 library(dplyr)
 library(ggplot2)
 
 ```
-
-
+#download text file from Bridges of all states in 2020
+```{r}
+df = read.delim("2020HwyBridgesDelimitedAllStates.txt", header = TRUE, sep = ",")
+head(df)
+```
+#Selected columns that I found interesting and thought would make a good graph
 ```{r}
 new_df <- df %>% select(STATE_CODE_001, MAINTENANCE_021, DESIGN_LOAD_031, RAILINGS_036A, YEAR_RECONSTRUCTED_106, BRIDGE_CONDITION, YEAR_BUILT_027)
 
 head(new_df)
 ```
-
+#(Need to condense) BRIDGE_CONDITION is the current condition of the bridge with G being 'Good', F being "Fair", P being 'Poor' and replaces them with 3,2,1
 ```{r}
 numdf <- as.data.frame(new_df)
 numdf$BRIDGE_CONDITION <- gsub('G', '3', numdf$BRIDGE_CONDITION)
 numdf$BRIDGE_CONDITION <- gsub('P', '1', numdf$BRIDGE_CONDITION)
 numdf$BRIDGE_CONDITION <- gsub('F', '2', numdf$BRIDGE_CONDITION)
 ```
-
-
+#Filtered further to only be states Wisconsin and Illinois for possible comparison
 ```{r}
-numdf <- numdf %>% filter(STATE_CODE_001 == "55")
-  #mutate(State_Code = STATE_CODE_001, Maintenance = MAINTENANCE_021)
-
+numdf <- numdf %>% filter(STATE_CODE_001 == "55" | STATE_CODE_001 == "17")
 ```
-
+#Changed values in dataset to numeric and deleted outliers that were disrupting the graph
 ```{r}
-colnames(numdf) <- c("State Code", "Maintenance", "Design Load", "Railings", "Year Reconstructed", "Bridge Condition", "Year Built")
-
 numdf <- as.data.frame(apply(numdf, 2, as.numeric))
-
-typeof(data_num[1, 1])
+numdf<-numdf[!(numdf$YEAR_BUILT_027=="2" | numdf$YEAR_BUILT_027=="3" | numdf$YEAR_BUILT_027=="9"),]
 ```
 
+#Plot of maintenance and year built, this one I found the most interesting and really enjoyed.  It shows a clear increase in maintenance in the 1960s after they were built.  This makes me wonder if older bridges may be more sturdy or less used, or even destroyed.  There was an outlier for the maintence being in the 6000 range, which added a skew to the graph, but not majorly.
 
 ```{r}
-new_df %>% ggplot(aes("Year Built", "Bridge Condition"))
-
+numdf %>% ggplot(aes(y=MAINTENANCE_021, x=YEAR_BUILT_027)) +
+  geom_bar(stat="identity") + ggtitle("Maintenance vs Year Built in 2020")
 ```
+
+#I think this was a great project, but I have found places that I will need to improve on for large projects
